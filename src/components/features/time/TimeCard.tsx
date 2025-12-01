@@ -29,8 +29,8 @@ export const TimeCard = ({ className }: { className?: string }) => {
     }).format(time);
 
     return (
-        <Card className={cn("flex flex-col justify-center items-center text-center", className)}>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter tabular-nums text-primary">
+        <Card className={cn("flex flex-col justify-center items-center text-center backdrop-blur-md bg-card/50 border-white/10", className)}>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter tabular-nums text-primary font-mono">
                 {timeString}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-medium mt-2">

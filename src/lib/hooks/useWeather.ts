@@ -9,10 +9,9 @@ interface WeatherData {
     };
 }
 
-const LAT = -6.2088;
-const LON = 106.8456;
 
-export function useWeather() {
+
+export function useWeather(lat: number, lon: number) {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +19,7 @@ export function useWeather() {
         const fetchWeather = async () => {
             try {
                 const res = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code`
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`
                 );
                 const data = await res.json();
                 setWeather(data);
@@ -32,7 +31,7 @@ export function useWeather() {
         };
 
         fetchWeather();
-    }, []);
+    }, [lat, lon]);
 
     return { weather, loading };
 }

@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { PrayerData, PrayerResponse } from "@/lib/types/prayer";
 
-const CITY = "Jakarta";
-const COUNTRY = "Indonesia";
 
-export function usePrayerTimes() {
+
+export function usePrayerTimes(lat: number, lon: number) {
     const [data, setData] = useState<PrayerData | null>(null);
     const [nextPrayer, setNextPrayer] = useState<{ name: string; time: Date } | null>(null);
     const [timeToNext, setTimeToNext] = useState<string>("");
@@ -17,7 +16,7 @@ export function usePrayerTimes() {
         const fetchPrayerTimes = async () => {
             try {
                 const res = await fetch(
-                    `https://api.aladhan.com/v1/timingsByCity?city=${CITY}&country=${COUNTRY}&method=2`
+                    `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`
                 );
                 if (!res.ok) throw new Error("Failed to fetch prayer times");
                 const json: PrayerResponse = await res.json();
@@ -30,7 +29,7 @@ export function usePrayerTimes() {
         };
 
         fetchPrayerTimes();
-    }, []);
+    }, [lat, lon]);
 
     useEffect(() => {
         if (!data) return;

@@ -5,12 +5,13 @@ import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
 import { cn } from "@/lib/utils/cn";
 import { Clock } from "lucide-react";
 
-export const PrayerCard = ({ className }: { className?: string }) => {
-    const { data, nextPrayer, timeToNext, loading, error } = usePrayerTimes();
+export const PrayerCard = ({ className, lat, lon }: { className?: string; lat?: number; lon?: number }) => {
+    // Default to Jakarta if no coords provided
+    const { data, nextPrayer, timeToNext, loading, error } = usePrayerTimes(lat ?? -6.2088, lon ?? 106.8456);
 
     if (loading) {
         return (
-            <Card className={cn("p-6 flex flex-col gap-4 animate-pulse", className)}>
+            <Card className={cn("p-6 flex flex-col gap-4 animate-pulse backdrop-blur-md bg-card/50 border-white/10", className)}>
                 <div className="h-6 w-1/2 bg-muted rounded" />
                 <div className="space-y-2">
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -23,7 +24,7 @@ export const PrayerCard = ({ className }: { className?: string }) => {
 
     if (error || !data) {
         return (
-            <Card className={cn("p-6 flex items-center justify-center text-destructive", className)}>
+            <Card className={cn("p-6 flex items-center justify-center text-destructive backdrop-blur-md bg-card/50 border-white/10", className)}>
                 <p>Failed to load prayer times</p>
             </Card>
         );
@@ -32,10 +33,10 @@ export const PrayerCard = ({ className }: { className?: string }) => {
     const prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
     return (
-        <Card className={cn("flex flex-col", className)}>
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
+        <Card className={cn("flex flex-col backdrop-blur-md bg-card/50 border-white/10", className)}>
+            <div className="flex items-center justify-between mb-4 p-4 pb-0">
+                <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
                     Prayer Times
                 </h2>
                 {nextPrayer && (
@@ -45,7 +46,7 @@ export const PrayerCard = ({ className }: { className?: string }) => {
                 )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1 p-4 pt-0">
                 {prayers.map((prayer) => {
                     const isNext = nextPrayer?.name === prayer;
                     return (
@@ -53,11 +54,11 @@ export const PrayerCard = ({ className }: { className?: string }) => {
                             key={prayer}
                             className={cn(
                                 "flex justify-between items-center p-2 rounded-lg transition-colors",
-                                isNext ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                                isNext ? "bg-primary/10 text-primary" : "hover:bg-muted/50 text-muted-foreground"
                             )}
                         >
                             <span className="text-sm font-medium">{prayer}</span>
-                            <span className="text-sm font-mono">
+                            <span className="text-sm font-mono font-semibold">
                                 {data.timings[prayer as keyof typeof data.timings]}
                             </span>
                         </div>
